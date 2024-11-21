@@ -31,4 +31,13 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+    fun searchMovies(apiKey: String, query: String) {
+        viewModelScope.launch {
+            try {
+                movies.value = api.searchMovies(apiKey, query).results
+            } catch (e: Exception) {
+                Log.e("MainViewModel", "Error searching movies", e)
+            }
+        }
+    }
 }
