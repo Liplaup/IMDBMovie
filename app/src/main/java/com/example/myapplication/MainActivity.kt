@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
                             SeriesScreen(viewModel = viewModel, navController = navController)
                         }
                         composable(Destination.Acteurs.route) {
-                            // Implement your ActorsScreen here
+                            ActorsScreen(viewModel = viewModel, navController = navController)
                         }
                     }
                 }

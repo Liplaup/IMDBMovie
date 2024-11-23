@@ -19,6 +19,7 @@ class MainViewModel : ViewModel() {
 
     val movies = MutableStateFlow<List<TmdbMovie>>(listOf())
     val series = MutableStateFlow<List<TmdbSeries>>(listOf())
+    val actors = MutableStateFlow<List<TmdbActor>>(listOf()) // Corrected variable
 
     fun getMovies(apiKey: String) {
         viewModelScope.launch {
@@ -56,6 +57,26 @@ class MainViewModel : ViewModel() {
                 series.value = api.searchSeries(apiKey, query).results
             } catch (e: Exception) {
                 Log.e("MainViewModel", "Error searching series", e)
+            }
+        }
+    }
+
+    fun getActors(apiKey: String) {
+        viewModelScope.launch {
+            try {
+                actors.value = api.popularActors(apiKey).results
+            } catch (e: Exception) {
+                Log.e("MainViewModel", "Error fetching actors", e)
+            }
+        }
+    }
+
+    fun searchActors(apiKey: String, query: String) {
+        viewModelScope.launch {
+            try {
+                actors.value = api.searchActors(apiKey, query).results
+            } catch (e: Exception) {
+                Log.e("MainViewModel", "Error searching actors", e)
             }
         }
     }

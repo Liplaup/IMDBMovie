@@ -13,6 +13,12 @@ interface Api {
     @GET("tv/popular")
         suspend fun popularSeries(@Query("api_key") apiKey: String): TmdbSeriesResult
 
-        @GET("search/tv")
+    @GET("search/tv")
         suspend fun searchSeries(@Query("api_key") apiKey: String, @Query("query") query: String): TmdbSeriesResult
-    }
+
+    @GET("person/popular")
+    suspend fun popularActors(@Query("api_key") apiKey: String): TmdbActorsResult
+
+    @GET("search/person")
+    suspend fun searchActors(@Query("api_key") apiKey: String, @Query("query") query: String): TmdbActorsResult
+}

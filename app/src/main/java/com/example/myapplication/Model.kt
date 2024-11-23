@@ -49,3 +49,22 @@ data class TmdbSeries(
     val popularity: Double,
     val origin_country: List<String>
 )
+
+data class TmdbActor(
+    val id: Int,
+    val name: String,
+    val original_name: String,
+    val media_type: String,
+    val adult: Boolean,
+    val popularity: Double,
+    val gender: Int,
+    val known_for_department: String?,
+    val profile_path: String
+)
+
+data class TmdbActorsResult(
+    val page: Int,
+    val results: List<TmdbActor>,
+    val total_pages: Int,
+    val total_results: Int
+)
