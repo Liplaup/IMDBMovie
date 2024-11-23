@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface Api {
@@ -21,4 +22,11 @@ interface Api {
 
     @GET("search/person")
     suspend fun searchActors(@Query("api_key") apiKey: String, @Query("query") query: String): TmdbActorsResult
+
+    @GET("movie/{movie_id}")
+    suspend fun getMovieDetails(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String
+    ): TmdbMovie
+
 }

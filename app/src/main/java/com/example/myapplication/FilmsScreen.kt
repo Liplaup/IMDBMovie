@@ -124,7 +124,7 @@ fun FilmCard(tmdbMovie: TmdbMovie, navController: NavController) {
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .clickable { navController.navigate(FilmDetailDest(tmdbMovie.id)) },
+            .clickable { navController.navigate("movieDetail/${tmdbMovie.id}") },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Column(

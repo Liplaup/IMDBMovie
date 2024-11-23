@@ -1,6 +1,8 @@
 package com.example.myapplication
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +21,7 @@ class MainViewModel : ViewModel() {
 
     val movies = MutableStateFlow<List<TmdbMovie>>(listOf())
     val series = MutableStateFlow<List<TmdbSeries>>(listOf())
-    val actors = MutableStateFlow<List<TmdbActor>>(listOf()) // Corrected variable
+    val actors = MutableStateFlow<List<TmdbActor>>(listOf())
 
     fun getMovies(apiKey: String) {
         viewModelScope.launch {
@@ -77,6 +79,20 @@ class MainViewModel : ViewModel() {
                 actors.value = api.searchActors(apiKey, query).results
             } catch (e: Exception) {
                 Log.e("MainViewModel", "Error searching actors", e)
+            }
+        }
+    }
+
+    private val _movie = MutableLiveData<TmdbMovie>()
+    val movie: LiveData<TmdbMovie> get() = _movie
+
+    fun getMovieById(movieId: Int, apiKey: String) {
+        viewModelScope.launch {
+            try {
+                val movieDetails = api.getMovieDetails(movieId, apiKey)
+                _movie.postValue(movieDetails)
+            } catch (e: Exception) {
+                Log.e("MainViewModel", "Error fetching movie details", e)
             }
         }
     }

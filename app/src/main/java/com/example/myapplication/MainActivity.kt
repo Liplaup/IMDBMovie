@@ -60,6 +60,10 @@ class MainActivity : ComponentActivity() {
                         composable(Destination.Acteurs.route) {
                             ActorsScreen(viewModel = viewModel, navController = navController)
                         }
+                        composable("movieDetail/{movieId}") { backStackEntry ->
+                            val movieId = backStackEntry.arguments?.getString("movieId")?.toInt() ?: 0
+                            MovieDetailScreen(movieId, viewModel, navController)
+                        }
                     }
                 }
             }
