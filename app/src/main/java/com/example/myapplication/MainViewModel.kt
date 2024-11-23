@@ -110,4 +110,15 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+
+    fun getActorsByMovieId(movieId: Int, apiKey: String) {
+        viewModelScope.launch {
+            try {
+                val actorList = api.getActorsByMovieId(movieId, apiKey).cast
+                actors.value = actorList
+            } catch (e: Exception) {
+                Log.e("MainViewModel", "Error fetching actors by movie ID", e)
+            }
+        }
+    }
 }

@@ -1,6 +1,5 @@
 package com.example.myapplication
 
-
 data class TmdbMoviesResult(
     val page: Int,
     val results: List<TmdbMovie>,
@@ -22,7 +21,11 @@ data class TmdbMovie(
     val title: String,
     val video: Boolean,
     val vote_average: Double,
-    val vote_count: Int
+    val vote_count: Int,
+    val genres: List<Genre>,
+    val runtime: Int,
+    val budget: Long,
+    val revenue: Long
 )
 
 data class TmdbSeriesResult(
@@ -40,14 +43,15 @@ data class TmdbSeries(
     val backdrop_path: String,
     val vote_average: Double,
     val vote_count: Int,
-    val first_air_date: String, // Correct property name
+    val first_air_date: String,
     val original_name: String,
     val media_type: String,
     val adult: Boolean,
     val original_language: String,
     val genre_ids: List<Int>,
     val popularity: Double,
-    val origin_country: List<String>
+    val origin_country: List<String>,
+    val genres: List<Genre>
 )
 
 data class TmdbActor(
@@ -59,7 +63,8 @@ data class TmdbActor(
     val popularity: Double,
     val gender: Int,
     val known_for_department: String?,
-    val profile_path: String
+    val profile_path: String,
+    val character: String
 )
 
 data class TmdbActorsResult(
@@ -67,4 +72,13 @@ data class TmdbActorsResult(
     val results: List<TmdbActor>,
     val total_pages: Int,
     val total_results: Int
+)
+
+data class Genre(
+    val id: Int,
+    val name: String
+)
+
+data class CreditsResponse(
+    val cast: List<TmdbActor>
 )
