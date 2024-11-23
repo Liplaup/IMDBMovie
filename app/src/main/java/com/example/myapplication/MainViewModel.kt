@@ -23,6 +23,12 @@ class MainViewModel : ViewModel() {
     val series = MutableStateFlow<List<TmdbSeries>>(listOf())
     val actors = MutableStateFlow<List<TmdbActor>>(listOf())
 
+    private val _movie = MutableLiveData<TmdbMovie>()
+    val movie: LiveData<TmdbMovie> get() = _movie
+
+    private val _serie = MutableLiveData<TmdbSeries>()
+    val serie: LiveData<TmdbSeries> get() = _serie
+
     fun getMovies(apiKey: String) {
         viewModelScope.launch {
             try {
@@ -83,9 +89,6 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    private val _movie = MutableLiveData<TmdbMovie>()
-    val movie: LiveData<TmdbMovie> get() = _movie
-
     fun getMovieById(movieId: Int, apiKey: String) {
         viewModelScope.launch {
             try {
@@ -93,6 +96,17 @@ class MainViewModel : ViewModel() {
                 _movie.postValue(movieDetails)
             } catch (e: Exception) {
                 Log.e("MainViewModel", "Error fetching movie details", e)
+            }
+        }
+    }
+
+    fun getSerieById(serieId: Int, apiKey: String) {
+        viewModelScope.launch {
+            try {
+                val serieDetails = api.getSerieDetails(serieId, apiKey)
+                _serie.postValue(serieDetails)
+            } catch (e: Exception) {
+                Log.e("MainViewModel", "Error fetching series details", e)
             }
         }
     }

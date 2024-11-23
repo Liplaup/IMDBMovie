@@ -1,5 +1,3 @@
-@file:Suppress("PLUGIN_IS_NOT_ENABLED")
-
 package com.example.myapplication
 
 import android.annotation.SuppressLint
@@ -63,6 +61,10 @@ class MainActivity : ComponentActivity() {
                         composable("movieDetail/{movieId}") { backStackEntry ->
                             val movieId = backStackEntry.arguments?.getString("movieId")?.toInt() ?: 0
                             MovieDetailScreen(movieId, viewModel, navController)
+                        }
+                        composable("serieDetail/{serieId}") { backStackEntry ->
+                            val serieId = backStackEntry.arguments?.getString("serieId")?.toInt() ?: return@composable
+                            SerieDetailScreen(serieId = serieId, viewModel = viewModel, navController = navController)
                         }
                     }
                 }

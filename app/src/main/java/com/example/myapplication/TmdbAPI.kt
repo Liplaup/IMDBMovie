@@ -28,5 +28,10 @@ interface Api {
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String
     ): TmdbMovie
+    @GET("tv/{serie_id}")
+    suspend fun getSerieDetails(
+        @Path("serie_id") serieId: Int,
+        @Query("api_key") apiKey: String
+    ): TmdbSeries
 
 }

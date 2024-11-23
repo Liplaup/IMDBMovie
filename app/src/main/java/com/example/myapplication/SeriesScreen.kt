@@ -59,10 +59,7 @@ fun SeriesScreen(viewModel: MainViewModel, navController: NavController) {
                 if (isSearching) {
                     TextField(
                         value = searchQuery,
-                        onValueChange = {
-                            searchQuery = it
-                            viewModel.searchSeries("d56137a7d2c77892dd70729b2a4ee56b", searchQuery.text)
-                        },
+                        onValueChange = { searchQuery = it },
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = { Text("Search...") }
                     )
@@ -72,10 +69,10 @@ fun SeriesScreen(viewModel: MainViewModel, navController: NavController) {
             },
             actions = {
                 IconButton(onClick = {
-                    isSearching = !isSearching
-                    if (!isSearching) {
-                        viewModel.getSeries("d56137a7d2c77892dd70729b2a4ee56b")
+                    if (isSearching) {
+                        viewModel.searchSeries("d56137a7d2c77892dd70729b2a4ee56b", searchQuery.text)
                     }
+                    isSearching = !isSearching
                 }) {
                     Icon(Icons.Default.Search, contentDescription = "Search")
                 }
@@ -113,9 +110,9 @@ fun SeriesGrid(tmdbSeries: List<TmdbSeries>, navController: NavController) {
             .fillMaxSize()
             .padding(8.dp)
     ) {
-        items(tmdbSeries) { series ->
+        items(tmdbSeries) { serie ->
             SeriesCard(
-                tmdbSeries = series,
+                tmdbSeries = serie,
                 navController = navController
             )
         }
@@ -127,7 +124,7 @@ fun SeriesCard(tmdbSeries: TmdbSeries, navController: NavController) {
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .clickable { /* No navigation for now */ },
+            .clickable { navController.navigate("serieDetail/${tmdbSeries.id}") },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Column(
