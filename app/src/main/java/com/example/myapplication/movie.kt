@@ -7,8 +7,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,10 +35,11 @@ import coil.compose.AsyncImage
 import androidx.compose.foundation.layout.Spacer as Spacer1
 import androidx.compose.material3.Text as Text1
 
+
 @Composable
 fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel, navController: NavController) {
     val movie by viewModel.movie.observeAsState()
-    val actors by viewModel.actors.collectAsState() // Corrected this line
+    val actors by viewModel.actors.collectAsState()
     val isLoading = remember { mutableStateOf(true) }
 
     LaunchedEffect(movieId) {
@@ -58,6 +63,7 @@ fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel, navController: Nav
                     .verticalScroll(rememberScrollState())
                     .background(colorScheme.background)
                     .padding(16.dp)
+                    .navigationBarsPadding() // Add padding to avoid content being hidden by the navigation bar
             ) {
                 Text1(
                     text = it.title,
@@ -126,16 +132,41 @@ fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel, navController: Nav
                     color = colorScheme.onBackground
                 )
                 Spacer1(modifier = Modifier.height(8.dp))
-                actors?.let { actorList: List<TmdbActor> ->
-                    actorList.forEach { actor: TmdbActor ->
-                        Text1(
-                            text = "${actor.name} as ${actor.character}",
-                            style = typography.bodyLarge,
-                            color = colorScheme.onBackground
-                        )
-                        Spacer1(modifier = Modifier.height(4.dp))
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp) // Add horizontal padding to ensure content is fully visible
+                        .navigationBarsPadding() // Add padding to avoid content being hidden by the navigation bar
+                ) {
+                    items(actors) { actor ->
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .width(128.dp) // Ensure enough width for text
+                        ) {
+                            AsyncImage(
+                                model = "https://image.tmdb.org/t/p/w500/${actor.profile_path}",
+                                contentDescription = actor.name,
+                                modifier = Modifier
+                                    .size(128.dp)
+                                    .background(Color.Gray)
+                            )
+                            Spacer1(modifier = Modifier.height(4.dp))
+                            Text1(
+                                text = actor.name,
+                                style = typography.bodyLarge,
+                                color = colorScheme.onBackground
+                            )
+                            Text1(
+                                text = "as ${actor.character}",
+                                style = typography.bodyMedium,
+                                color = colorScheme.onBackground
+                            )
+                        }
                     }
                 }
+                Spacer1(modifier = Modifier.height(64.dp)) // Add extra space after the carousel
             }
         } ?: run {
             Box(
