@@ -40,4 +40,10 @@ interface Api {
         @Query("api_key") apiKey: String
     ): CreditsResponse
 
+    @GET("movie/{movie_id}/credits")
+    suspend fun getActorsBySerieId(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String
+    ): CreditsResponse
+
 }

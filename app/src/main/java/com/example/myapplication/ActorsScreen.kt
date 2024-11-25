@@ -47,9 +47,7 @@ fun ActorsScreen(viewModel: MainViewModel, navController: NavController) {
     val isLoading = remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
-        if (actors.isEmpty()) {
-            viewModel.getActors("d56137a7d2c77892dd70729b2a4ee56b")
-        }
+        viewModel.getActors("d56137a7d2c77892dd70729b2a4ee56b")
         isLoading.value = false
     }
 
@@ -104,7 +102,6 @@ fun ActorsScreen(viewModel: MainViewModel, navController: NavController) {
         }
     }
 }
-
 @Composable
 fun ActorsGrid(tmdbActors: List<TmdbActor>, navController: NavController) {
     LazyVerticalGrid(

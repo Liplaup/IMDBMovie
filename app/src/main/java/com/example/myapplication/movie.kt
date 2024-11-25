@@ -27,7 +27,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -63,7 +62,7 @@ fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel, navController: Nav
                     .verticalScroll(rememberScrollState())
                     .background(colorScheme.background)
                     .padding(16.dp)
-                    .navigationBarsPadding() // Add padding to avoid content being hidden by the navigation bar
+                    .navigationBarsPadding()
             ) {
                 Text1(
                     text = it.title,
@@ -80,7 +79,6 @@ fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel, navController: Nav
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)
-                        .background(Color.Gray)
                 )
                 Spacer1(modifier = Modifier.height(16.dp))
                 Row(
@@ -92,7 +90,6 @@ fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel, navController: Nav
                         modifier = Modifier
                             .weight(1f)
                             .height(300.dp)
-                            .background(Color.Gray)
                     )
                     Spacer1(modifier = Modifier.width(16.dp))
                     Column(
@@ -126,7 +123,7 @@ fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel, navController: Nav
                 )
                 Spacer1(modifier = Modifier.height(16.dp))
                 Text1(
-                    text = "Têtes d'affiches",
+                    text = "Headliners",
                     style = typography.headlineLarge,
                     fontWeight = FontWeight.Bold,
                     color = colorScheme.onBackground
@@ -135,22 +132,21 @@ fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel, navController: Nav
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp) // Add horizontal padding to ensure content is fully visible
-                        .navigationBarsPadding() // Add padding to avoid content being hidden by the navigation bar
+                        .padding(horizontal = 16.dp)
+                        .navigationBarsPadding()
                 ) {
                     items(actors) { actor ->
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier
                                 .padding(8.dp)
-                                .width(128.dp) // Ensure enough width for text
+                                .width(128.dp)
                         ) {
                             AsyncImage(
                                 model = "https://image.tmdb.org/t/p/w500/${actor.profile_path}",
                                 contentDescription = actor.name,
                                 modifier = Modifier
                                     .size(128.dp)
-                                    .background(Color.Gray)
                             )
                             Spacer1(modifier = Modifier.height(4.dp))
                             Text1(
@@ -166,7 +162,7 @@ fun MovieDetailScreen(movieId: Int, viewModel: MainViewModel, navController: Nav
                         }
                     }
                 }
-                Spacer1(modifier = Modifier.height(64.dp)) // Add extra space after the carousel
+                Spacer1(modifier = Modifier.height(64.dp))
             }
         } ?: run {
             Box(
