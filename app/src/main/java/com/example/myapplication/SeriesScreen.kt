@@ -38,6 +38,58 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 
+@Composable
+fun SeriesCard(tmdbSeries: TmdbSeries, navController: NavController) {
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .clickable { navController.navigate("serieDetail/${tmdbSeries.id}") },
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(8.dp)
+        ) {
+            AsyncImage(
+                model = "https://image.tmdb.org/t/p/w500/${tmdbSeries.poster_path}",
+                contentDescription = tmdbSeries.name,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+            )
+            Text(
+                text = tmdbSeries.name,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+            Text(
+                text = tmdbSeries.first_air_date,
+                style = MaterialTheme.typography.bodySmall,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun SeriesGrid(tmdbSeries: List<TmdbSeries>, navController: NavController) {
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(150.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+    ) {
+        items(tmdbSeries) { series ->
+            SeriesCard(
+                tmdbSeries = series,
+                navController = navController
+            )
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SeriesScreen(viewModel: MainViewModel, navController: NavController) {
@@ -53,7 +105,11 @@ fun SeriesScreen(viewModel: MainViewModel, navController: NavController) {
         isLoading.value = false
     }
 
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 100.dp)
+    ) {
         TopAppBar(
             title = {
                 if (isSearching) {
@@ -97,58 +153,6 @@ fun SeriesScreen(viewModel: MainViewModel, navController: NavController) {
             SeriesGrid(
                 tmdbSeries = series,
                 navController = navController
-            )
-        }
-    }
-}
-
-@Composable
-fun SeriesGrid(tmdbSeries: List<TmdbSeries>, navController: NavController) {
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(150.dp),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp)
-    ) {
-        items(tmdbSeries) { serie ->
-            SeriesCard(
-                tmdbSeries = serie,
-                navController = navController
-            )
-        }
-    }
-}
-
-@Composable
-fun SeriesCard(tmdbSeries: TmdbSeries, navController: NavController) {
-    Card(
-        modifier = Modifier
-            .padding(8.dp)
-            .clickable { navController.navigate("serieDetail/${tmdbSeries.id}") },
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(8.dp)
-        ) {
-            AsyncImage(
-                model = "https://image.tmdb.org/t/p/w500/${tmdbSeries.poster_path}",
-                contentDescription = tmdbSeries.name,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-            )
-            Text(
-                text = tmdbSeries.name,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-            Text(
-                text = tmdbSeries.first_air_date,
-                style = MaterialTheme.typography.bodySmall,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 4.dp)
             )
         }
     }

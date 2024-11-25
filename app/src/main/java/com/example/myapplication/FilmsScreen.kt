@@ -38,6 +38,57 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 
+@Composable
+fun FilmCard(tmdbMovie: TmdbMovie, navController: NavController) {
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .clickable { navController.navigate("movieDetail/${tmdbMovie.id}") },
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(8.dp)
+        ) {
+            AsyncImage(
+                model = "https://image.tmdb.org/t/p/w500/${tmdbMovie.poster_path}",
+                contentDescription = tmdbMovie.title,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+            )
+            Text(
+                text = tmdbMovie.title,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+            Text(
+                text = tmdbMovie.release_date,
+                style = MaterialTheme.typography.bodySmall,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
+    }
+}
+@Composable
+fun FilmsGrid(tmdbMovies: List<TmdbMovie>, navController: NavController) {
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(150.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+    ) {
+        items(tmdbMovies) { movie ->
+            FilmCard(
+                tmdbMovie = movie,
+                navController = navController
+            )
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilmsScreen(viewModel: MainViewModel, navController: NavController) {
@@ -53,7 +104,11 @@ fun FilmsScreen(viewModel: MainViewModel, navController: NavController) {
         isLoading.value = false
     }
 
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 100.dp)
+    ) {
         TopAppBar(
             title = {
                 if (isSearching) {
@@ -97,58 +152,6 @@ fun FilmsScreen(viewModel: MainViewModel, navController: NavController) {
             FilmsGrid(
                 tmdbMovies = movies,
                 navController = navController
-            )
-        }
-    }
-}
-
-@Composable
-fun FilmsGrid(tmdbMovies: List<TmdbMovie>, navController: NavController) {
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(150.dp),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp)
-    ) {
-        items(tmdbMovies) { movie ->
-            FilmCard(
-                tmdbMovie = movie,
-                navController = navController
-            )
-        }
-    }
-}
-
-@Composable
-fun FilmCard(tmdbMovie: TmdbMovie, navController: NavController) {
-    Card(
-        modifier = Modifier
-            .padding(8.dp)
-            .clickable { navController.navigate("movieDetail/${tmdbMovie.id}") },
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(8.dp)
-        ) {
-            AsyncImage(
-                model = "https://image.tmdb.org/t/p/w500/${tmdbMovie.poster_path}",
-                contentDescription = tmdbMovie.title,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-            )
-            Text(
-                text = tmdbMovie.title,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-            Text(
-                text = tmdbMovie.release_date,
-                style = MaterialTheme.typography.bodySmall,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 4.dp)
             )
         }
     }
