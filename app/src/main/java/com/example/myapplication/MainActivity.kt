@@ -11,6 +11,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
@@ -24,12 +25,16 @@ import com.example.myapplication.ui.theme.MyApplicationTheme
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class Destination(val route: String) {
-    @Serializable object Profil : Destination("profil")
-    @Serializable object Films : Destination("films")
-    @Serializable object Series : Destination("series")
-    @Serializable object Acteurs : Destination("acteurs")
-}
+class Profildestination
+
+@Serializable
+class Filmsdestination
+
+@Serializable
+class Seriesdestination
+
+@Serializable
+class Acteursdestination
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -38,33 +43,40 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val viewModel: MainViewModel by viewModels()
+            val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
 
             MyApplicationTheme {
                 val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry?.destination?.route
+                val currentDestination = navBackStackEntry?.destination
 
-                Scaffold(bottomBar = { if (currentRoute != Destination.Profil.route) Navbar(navController) }) {
-                    NavHost(navController = navController, startDestination = Destination.Profil.route) {
-                        composable(Destination.Profil.route) {
-                            ProfileView(navController)
+                Scaffold(
+                    bottomBar = {
+                        if (currentDestination?.route != "profildestination") {
+                            Navbar(navController)
                         }
-                        composable(Destination.Films.route) {
-                            FilmsScreen(viewModel = viewModel, navController = navController)
+                    }
+                ) {
+                    NavHost(navController = navController, startDestination = "profildestination") {
+                        composable("profildestination") {
+                            ProfileView(windowSizeClass) { navController.navigate("filmsdestination") }
                         }
-                        composable(Destination.Series.route) {
-                            SeriesScreen(viewModel = viewModel, navController = navController)
+                        composable("filmsdestination") {
+                            FilmsScreen(viewModel, navController)
                         }
-                        composable(Destination.Acteurs.route) {
-                            ActorsScreen(viewModel = viewModel, navController = navController)
+                        composable("seriesdestination") {
+                            SeriesScreen(viewModel, navController)
+                        }
+                        composable("acteursdestination") {
+                            ActorsScreen(viewModel, navController)
                         }
                         composable("movieDetail/{movieId}") { backStackEntry ->
-                            val movieId = backStackEntry.arguments?.getString("movieId")?.toInt() ?: 0
-                            MovieDetailScreen(movieId, viewModel, navController)
+                            val movieId = backStackEntry.arguments?.getString("movieId")
+                            MovieDetailScreen(movieId?.toInt() ?: 0, viewModel, navController)
                         }
-                        composable("serieDetail/{serieId}") { backStackEntry ->
-                            val serieId = backStackEntry.arguments?.getString("serieId")?.toInt() ?: return@composable
-                            SerieDetailScreen(serieId = serieId, viewModel = viewModel, navController = navController)
+                        composable("serieDetail/{seriesId}") { backStackEntry ->
+                            val seriesId = backStackEntry.arguments?.getString("seriesId")
+                            SerieDetailScreen(seriesId?.toInt() ?: 0, viewModel, navController)
                         }
                     }
                 }
@@ -81,20 +93,20 @@ fun Navbar(navController: NavHostController) {
         NavigationBarItem(
             icon = { Icon(painterResource(id = R.drawable.ic_films), contentDescription = "Films") },
             label = { Text("Films") },
-            selected = navController.currentDestination?.route == Destination.Films.route,
-            onClick = { navController.navigate(Destination.Films.route) }
+            selected = navController.currentDestination?.route == "filmsdestination",
+            onClick = { navController.navigate("filmsdestination") }
         )
         NavigationBarItem(
             icon = { Icon(painterResource(id = R.drawable.ic_series), contentDescription = "Series") },
             label = { Text("Series") },
-            selected = navController.currentDestination?.route == Destination.Series.route,
-            onClick = { navController.navigate(Destination.Series.route) }
+            selected = navController.currentDestination?.route == "seriesdestination",
+            onClick = { navController.navigate("seriesdestination") }
         )
         NavigationBarItem(
             icon = { Icon(painterResource(id = R.drawable.ic_action_person), contentDescription = "Acteurs") },
             label = { Text("Acteurs") },
-            selected = navController.currentDestination?.route == Destination.Acteurs.route,
-            onClick = { navController.navigate(Destination.Acteurs.route) }
+            selected = navController.currentDestination?.route == "acteursdestination",
+            onClick = { navController.navigate("acteursdestination") }
         )
     }
 }

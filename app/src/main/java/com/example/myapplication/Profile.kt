@@ -1,114 +1,137 @@
 package com.example.myapplication
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.window.core.layout.WindowHeightSizeClass
+import androidx.window.core.layout.WindowSizeClass
+
 
 @Composable
-fun ProfileView(navController: NavController) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentSize(Alignment.Center),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        RoundImage()
+fun ProfileView(classes: WindowSizeClass, onClick: () -> Unit) {
+    val windowHeightClass = classes.windowHeightSizeClass
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            "Paul GARDIEN",
-            fontWeight = FontWeight.Bold,
-            fontSize = 28.sp,
-            color = Color.Black
-        )
-        Text("Data Engineer", fontSize = 18.sp)
-        Text("Ecole d'ingénieur ISIS", fontSize = 16.sp)
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        ContactInfo()
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        StartButton(onClick = { navController.navigate("films") })
+    when (windowHeightClass) {
+        WindowHeightSizeClass.COMPACT -> {
+            CompactProfileLayout(onClick)
+        }
+        else -> {
+            RegularProfileLayout(onClick)
+        }
     }
 }
 
 @Composable
-fun RoundImage() {
-    val image = painterResource(id = R.drawable.sans_titre)
+fun RegularProfileLayout(onClick: () -> Unit) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize().padding(16.dp)
+    ) {
+        ProfileImage()
+        Spacer(Modifier.height(10.dp))
+        UserInfo()
+        Spacer(Modifier.height(20.dp))
+        ContactInfo()
+        Spacer(Modifier.height(20.dp))
+        StartButton(onClick = onClick)
+    }
+}
+
+@Composable
+fun CompactProfileLayout(onClick: () -> Unit) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(vertical = 4.dp)
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                ProfileImage()
+                Spacer(Modifier.height(10.dp))
+                UserInfo()
+            }
+            Spacer(Modifier.width(100.dp))
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                ContactInfo()
+                Spacer(Modifier.height(20.dp))
+                StartButton(onClick = onClick)
+            }
+        }
+    }
+}
+
+@Composable
+fun ProfileImage() {
     Image(
-        painter = image,
-        contentDescription = "Visage",
-        contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .size(150.dp)
-            .clip(CircleShape)
+        painter = painterResource(R.drawable.sans_titre),
+        contentDescription = "Profile Image",
+        modifier = Modifier.clip(RectangleShape)
+    )
+}
+
+@Composable
+fun UserInfo() {
+    Text(
+        text = "Paul GARDIEN",
+        fontSize = 30.sp,
+        fontWeight = FontWeight.Bold
+    )
+    Text(
+        text = "Data Engineer",
+        fontSize = 25.sp,
+        fontWeight = FontWeight.Bold
+    )
+    Spacer(Modifier.height(20.dp))
+    Text(
+        text = "Ecole d'ingénieur ISIS",
+        fontStyle = FontStyle.Italic
     )
 }
 
 @Composable
 fun ContactInfo() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
+    Row {
+        Image(
+            painter = painterResource(R.drawable.mail),
+            contentDescription = "Email",
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.mail),
-                contentDescription = "Icon Mail",
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text("paul.gardien63@gmail.com")
-        }
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
+                .size(30.dp)
+                .padding(end = 8.dp)
+        )
+        Text(text = "paul.gardien63@gmail.com")
+    }
+    Spacer(Modifier.height(10.dp))
+    Row {
+        Image(
+            painter = painterResource(R.drawable.li),
+            contentDescription = "LinkedIn",
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.li),
-                contentDescription = "Icon LinkedIn",
-                tint = Color(0xFF0A66C2),
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text("https://www.linkedin.com/in/paul-gardien-581a271a1")
-        }
+                .size(30.dp)
+                .padding(end = 8.dp)
+        )
+        Text(text = "www.linkedin.com")
     }
 }
 
@@ -116,12 +139,8 @@ fun ContactInfo() {
 fun StartButton(onClick: () -> Unit) {
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6200EA)),
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth()
-            .height(50.dp)
+        colors = ButtonDefaults.buttonColors()
     ) {
-        Text("Démarrer", fontSize = 18.sp, color = Color.White)
+        Text("Démarrer")
     }
 }
