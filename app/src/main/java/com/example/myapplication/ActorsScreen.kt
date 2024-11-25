@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -91,6 +93,7 @@ fun ActorsScreen(viewModel: MainViewModel, navController: NavController) {
     var isSearching by remember { mutableStateOf(false) }
     val actors by viewModel.actors.collectAsState()
     val isLoading = remember { mutableStateOf(true) }
+    val configuration = LocalConfiguration.current
 
     LaunchedEffect(Unit) {
         if (actors.isEmpty()) {
@@ -99,10 +102,12 @@ fun ActorsScreen(viewModel: MainViewModel, navController: NavController) {
         isLoading.value = false
     }
 
+    val bottomPadding = if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.dp else 100.dp
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = 100.dp)
+            .padding(bottom = bottomPadding)
     ) {
         TopAppBar(
             title = {

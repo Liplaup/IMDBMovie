@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -31,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -43,6 +46,8 @@ fun FilmCard(tmdbMovie: TmdbMovie, navController: NavController) {
     Card(
         modifier = Modifier
             .padding(8.dp)
+            .fillMaxWidth()
+            .wrapContentHeight()
             .clickable { navController.navigate("movieDetail/${tmdbMovie.id}") },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
@@ -61,21 +66,26 @@ fun FilmCard(tmdbMovie: TmdbMovie, navController: NavController) {
                 text = tmdbMovie.title,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
             )
             Text(
                 text = tmdbMovie.release_date,
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 4.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp)
             )
         }
     }
 }
+
 @Composable
 fun FilmsGrid(tmdbMovies: List<TmdbMovie>, navController: NavController) {
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(150.dp),
+        columns = GridCells.Adaptive(minSize = 150.dp),
         modifier = Modifier
             .fillMaxSize()
             .padding(8.dp)
@@ -96,6 +106,7 @@ fun FilmsScreen(viewModel: MainViewModel, navController: NavController) {
     var isSearching by remember { mutableStateOf(false) }
     val movies by viewModel.movies.collectAsState()
     val isLoading = remember { mutableStateOf(true) }
+    val configuration = LocalConfiguration.current
 
     LaunchedEffect(Unit) {
         if (movies.isEmpty()) {
@@ -104,10 +115,12 @@ fun FilmsScreen(viewModel: MainViewModel, navController: NavController) {
         isLoading.value = false
     }
 
+    val bottomPadding = if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.dp else 100.dp
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = 100.dp)
+            .padding(bottom = bottomPadding)
     ) {
         TopAppBar(
             title = {
