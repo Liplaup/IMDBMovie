@@ -21,8 +21,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -125,11 +125,17 @@ fun FilmsScreen(viewModel: MainViewModel, navController: NavController) {
         TopAppBar(
             title = {
                 if (isSearching) {
-                    TextField(
+                    OutlinedTextField(
                         value = searchQuery,
-                        onValueChange = { searchQuery = it },
-                        modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("Search...") }
+                        onValueChange = { query ->
+                            searchQuery = query
+                            viewModel.searchMovies("d56137a7d2c77892dd70729b2a4ee56b", query.text)
+                        },
+                        label = { Text("Rechercher un film") },
+                        singleLine = true,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
                     )
                 } else {
                     Text("Films")
@@ -137,9 +143,6 @@ fun FilmsScreen(viewModel: MainViewModel, navController: NavController) {
             },
             actions = {
                 IconButton(onClick = {
-                    if (isSearching) {
-                        viewModel.searchMovies("d56137a7d2c77892dd70729b2a4ee56b", searchQuery.text)
-                    }
                     isSearching = !isSearching
                 }) {
                     Icon(Icons.Default.Search, contentDescription = "Search")

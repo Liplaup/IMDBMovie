@@ -25,7 +25,8 @@ data class TmdbMovie(
     val genres: List<Genre>,
     val runtime: Int,
     val budget: Long,
-    val revenue: Long
+    val revenue: Long,
+    var isFav: Boolean = false
 )
 
 data class TmdbSeriesResult(
@@ -51,7 +52,8 @@ data class TmdbSeries(
     val genre_ids: List<Int>,
     val popularity: Double,
     val origin_country: List<String>,
-    val genres: List<Genre>
+    val genres: List<Genre>,
+    var isFav: Boolean = false
 )
 
 data class TmdbActor(
@@ -62,9 +64,9 @@ data class TmdbActor(
     val adult: Boolean,
     val popularity: Double,
     val gender: Int,
-    val known_for_department: String?,
     val profile_path: String,
-    val character: String
+    val character: String,
+    var isFav: Boolean = false
 )
 
 data class TmdbActorsResult(
@@ -79,6 +81,6 @@ data class Genre(
     val name: String
 )
 
-data class CreditsResponse(
+data class ListActor(
     val cast: List<TmdbActor>
 )

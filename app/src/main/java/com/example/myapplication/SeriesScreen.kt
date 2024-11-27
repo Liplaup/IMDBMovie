@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import androidx.compose.material3.OutlinedTextField
 
 @Composable
 fun SeriesCard(tmdbSeries: TmdbSeries, navController: NavController) {
@@ -118,11 +119,17 @@ fun SeriesScreen(viewModel: MainViewModel, navController: NavController) {
         TopAppBar(
             title = {
                 if (isSearching) {
-                    TextField(
+                    OutlinedTextField(
                         value = searchQuery,
-                        onValueChange = { searchQuery = it },
-                        modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("Search...") }
+                        onValueChange = { query ->
+                            searchQuery = query
+                            viewModel.searchSeries("d56137a7d2c77892dd70729b2a4ee56b", query.text)
+                        },
+                        label = { Text("Rechercher une série") },
+                        singleLine = true,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
                     )
                 } else {
                     Text("Series")
@@ -130,9 +137,6 @@ fun SeriesScreen(viewModel: MainViewModel, navController: NavController) {
             },
             actions = {
                 IconButton(onClick = {
-                    if (isSearching) {
-                        viewModel.searchSeries("d56137a7d2c77892dd70729b2a4ee56b", searchQuery.text)
-                    }
                     isSearching = !isSearching
                 }) {
                     Icon(Icons.Default.Search, contentDescription = "Search")

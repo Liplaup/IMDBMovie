@@ -38,12 +38,12 @@ interface Api {
     suspend fun getActorsByMovieId(
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String
-    ): CreditsResponse
+    ): ListActor
 
-    @GET("movie/{movie_id}/credits")
+    @GET("tv/{tv_id}/credits")
     suspend fun getActorsBySerieId(
-        @Path("movie_id") movieId: Int,
+        @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String
-    ): CreditsResponse
+    ): ListActor
 
 }
