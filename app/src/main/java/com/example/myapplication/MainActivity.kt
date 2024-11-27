@@ -37,41 +37,50 @@ import androidx.window.core.layout.WindowSizeClass
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import kotlinx.serialization.Serializable
 
+// Classe de destination pour le profil
 @Serializable
 class Profildestination
 
+// Classe de destination pour les films
 @Serializable
 class Filmsdestination
 
+// Classe de destination pour les séries
 @Serializable
 class Seriesdestination
 
+// Classe de destination pour les acteurs
 @Serializable
 class Acteursdestination
 
+// Activité principale
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge() // Active l'affichage de contenu jusqu'au bord de l'écran
         setContent {
-            val viewModel: MainViewModel by viewModels()
-            val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+            val viewModel: MainViewModel by viewModels() // Initialisation du ViewModel
+            val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass // Récupération des informations sur la taille de la fenêtre
 
             MyApplicationTheme {
-                val navController = rememberNavController()
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
+                val navController = rememberNavController() // Contrôleur de navigation
+                val navBackStackEntry by navController.currentBackStackEntryAsState() // Récupère l'entrée du backstack actuel
+                val currentDestination = navBackStackEntry?.destination // Destination actuelle
 
                 BoxWithConstraints {
+                    // Si l'écran est en mode paysage, afficher une barre de navigation horizontale
                     if (maxWidth > maxHeight) {
                         Row {
+                            // Si la destination actuelle n'est pas celle du profil, afficher la barre de navigation latérale
                             if (currentDestination?.route != "profildestination") {
                                 Navbar(navController, Modifier.fillMaxHeight().width(80.dp), isVertical = false)
                             }
+                            // Conteneur de la navigation et affichage des destinations
                             NavHostContainer(navController, viewModel, Modifier.fillMaxHeight().weight(1f), windowSizeClass)
                         }
                     } else {
+                        // Sinon, afficher la barre de navigation en bas
                         Scaffold(
                             bottomBar = {
                                 if (currentDestination?.route != "profildestination") {
@@ -87,13 +96,17 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+// Fonction composable pour la barre de navigation
 @Composable
 fun Navbar(navController: NavHostController, modifier: Modifier, isVertical: Boolean) {
+    // Si la navigation est verticale
     if (isVertical) {
         NavigationBar(
             containerColor = Color.White,
             modifier = modifier
         ) {
+            // Item de la barre de navigation pour les films
             NavigationBarItem(
                 icon = { Icon(painterResource(id = R.drawable.ic_films), contentDescription = "Films") },
                 label = { Text("Films") },
@@ -107,6 +120,7 @@ fun Navbar(navController: NavHostController, modifier: Modifier, isVertical: Boo
                     indicatorColor = Color.Transparent
                 )
             )
+            // Item de la barre de navigation pour les séries
             NavigationBarItem(
                 icon = { Icon(painterResource(id = R.drawable.ic_series), contentDescription = "Series") },
                 label = { Text("Series") },
@@ -120,6 +134,7 @@ fun Navbar(navController: NavHostController, modifier: Modifier, isVertical: Boo
                     indicatorColor = Color.Transparent
                 )
             )
+            // Item de la barre de navigation pour les acteurs
             NavigationBarItem(
                 icon = { Icon(painterResource(id = R.drawable.ic_action_person), contentDescription = "Acteurs") },
                 label = { Text("Acteurs") },
@@ -135,10 +150,12 @@ fun Navbar(navController: NavHostController, modifier: Modifier, isVertical: Boo
             )
         }
     } else {
+        // Si la navigation est horizontale, utiliser une barre latérale
         NavigationRail(
             containerColor = Color.White,
             modifier = modifier.fillMaxHeight()
         ) {
+            // Item de la barre latérale pour les films
             NavigationRailItem(
                 icon = { Icon(painterResource(id = R.drawable.ic_films), contentDescription = "Films") },
                 label = { Text("Films") },
@@ -152,6 +169,7 @@ fun Navbar(navController: NavHostController, modifier: Modifier, isVertical: Boo
                     indicatorColor = Color.Transparent
                 )
             )
+            // Item de la barre latérale pour les séries
             NavigationRailItem(
                 icon = { Icon(painterResource(id = R.drawable.ic_series), contentDescription = "Series") },
                 label = { Text("Series") },
@@ -165,6 +183,7 @@ fun Navbar(navController: NavHostController, modifier: Modifier, isVertical: Boo
                     indicatorColor = Color.Transparent
                 )
             )
+            // Item de la barre latérale pour les acteurs
             NavigationRailItem(
                 icon = { Icon(painterResource(id = R.drawable.ic_action_person), contentDescription = "Acteurs") },
                 label = { Text("Acteurs") },
@@ -182,9 +201,11 @@ fun Navbar(navController: NavHostController, modifier: Modifier, isVertical: Boo
     }
 }
 
+// Fonction composable pour le conteneur de navigation
 @Composable
 fun NavHostContainer(navController: NavHostController, viewModel: MainViewModel, modifier: Modifier, windowSizeClass: WindowSizeClass) {
     NavHost(navController = navController, startDestination = "profildestination", modifier = modifier) {
+        // Définition des destinations dans le NavHost
         composable("profildestination") {
             ProfileView(windowSizeClass) { navController.navigate("filmsdestination") }
         }

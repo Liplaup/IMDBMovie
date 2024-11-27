@@ -41,18 +41,22 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import androidx.compose.material3.OutlinedTextField
 
+// Composant qui affiche une carte pour chaque série
 @Composable
 fun SeriesCard(tmdbSeries: TmdbSeries, navController: NavController) {
+    // Carte cliquable qui redirige vers l'écran de détail de la série
     Card(
         modifier = Modifier
             .padding(8.dp)
             .clickable { navController.navigate("serieDetail/${tmdbSeries.id}") },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
+        // Contenu de la carte : une image, un titre et la première date de diffusion
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(8.dp)
         ) {
+            // Affiche l'image de la série (poster)
             AsyncImage(
                 model = "https://image.tmdb.org/t/p/w500/${tmdbSeries.poster_path}",
                 contentDescription = tmdbSeries.name,
@@ -60,12 +64,14 @@ fun SeriesCard(tmdbSeries: TmdbSeries, navController: NavController) {
                     .fillMaxWidth()
                     .height(200.dp)
             )
+            // Titre de la série
             Text(
                 text = tmdbSeries.name,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 8.dp)
             )
+            // Date de première diffusion
             Text(
                 text = tmdbSeries.first_air_date,
                 style = MaterialTheme.typography.bodySmall,
@@ -76,6 +82,7 @@ fun SeriesCard(tmdbSeries: TmdbSeries, navController: NavController) {
     }
 }
 
+// Composant qui affiche la grille de séries
 @Composable
 fun SeriesGrid(tmdbSeries: List<TmdbSeries>, navController: NavController) {
     LazyVerticalGrid(
@@ -84,6 +91,7 @@ fun SeriesGrid(tmdbSeries: List<TmdbSeries>, navController: NavController) {
             .fillMaxSize()
             .padding(8.dp)
     ) {
+        // Pour chaque série, affiche une carte
         items(tmdbSeries) { series ->
             SeriesCard(
                 tmdbSeries = series,
@@ -93,15 +101,19 @@ fun SeriesGrid(tmdbSeries: List<TmdbSeries>, navController: NavController) {
     }
 }
 
+// Écran principal des séries
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SeriesScreen(viewModel: MainViewModel, navController: NavController) {
+    // Variables pour gérer l'état de la recherche
     var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
     var isSearching by remember { mutableStateOf(false) }
+    // Récupère les séries depuis le ViewModel
     val series by viewModel.series.collectAsState()
     val isLoading = remember { mutableStateOf(true) }
     val configuration = LocalConfiguration.current
 
+    // Appel de la fonction pour récupérer les séries lorsque l'écran est lancé
     LaunchedEffect(Unit) {
         if (series.isEmpty()) {
             viewModel.getSeries("d56137a7d2c77892dd70729b2a4ee56b")
@@ -109,13 +121,16 @@ fun SeriesScreen(viewModel: MainViewModel, navController: NavController) {
         isLoading.value = false
     }
 
+    // Calcul du padding en fonction de l'orientation de l'écran (paysage ou portrait)
     val bottomPadding = if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.dp else 100.dp
 
+    // Structure de l'écran
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(bottom = bottomPadding)
     ) {
+        // Barre d'application avec le champ de recherche
         TopAppBar(
             title = {
                 if (isSearching) {
@@ -136,6 +151,7 @@ fun SeriesScreen(viewModel: MainViewModel, navController: NavController) {
                 }
             },
             actions = {
+                // Bouton pour activer/désactiver la recherche
                 IconButton(onClick = {
                     isSearching = !isSearching
                 }) {
@@ -144,6 +160,7 @@ fun SeriesScreen(viewModel: MainViewModel, navController: NavController) {
             }
         )
 
+        // Affichage du loader lorsque les séries sont en cours de chargement
         if (isLoading.value) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -152,6 +169,7 @@ fun SeriesScreen(viewModel: MainViewModel, navController: NavController) {
                 CircularProgressIndicator()
             }
         } else if (series.isEmpty()) {
+            // Si aucune série n'est trouvée, affiche un message
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -159,6 +177,7 @@ fun SeriesScreen(viewModel: MainViewModel, navController: NavController) {
                 Text("No series found.", style = MaterialTheme.typography.bodyMedium)
             }
         } else {
+            // Affiche la grille des séries
             SeriesGrid(
                 tmdbSeries = series,
                 navController = navController

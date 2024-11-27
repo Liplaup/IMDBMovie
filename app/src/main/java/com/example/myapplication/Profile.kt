@@ -29,36 +29,40 @@ import androidx.window.core.layout.WindowSizeClass
 
 @Composable
 fun ProfileView(classes: WindowSizeClass, onClick: () -> Unit) {
+    // Récupérer la taille de la fenêtre pour déterminer la disposition de l'écran
     val windowHeightClass = classes.windowHeightSizeClass
 
+    // Déterminer si la disposition doit être compacte ou régulière en fonction de la taille de la fenêtre
     when (windowHeightClass) {
         WindowHeightSizeClass.COMPACT -> {
-            CompactProfileLayout(onClick)
+            CompactProfileLayout(onClick) // Utiliser la disposition compacte pour les petits écrans
         }
         else -> {
-            RegularProfileLayout(onClick)
+            RegularProfileLayout(onClick) // Utiliser la disposition régulière pour les écrans plus grands
         }
     }
 }
 
 @Composable
 fun RegularProfileLayout(onClick: () -> Unit) {
+    // Disposition régulière pour les écrans plus grands
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize().padding(16.dp)
     ) {
-        ProfileImage()
-        Spacer(Modifier.height(10.dp))
-        UserInfo()
-        Spacer(Modifier.height(20.dp))
-        ContactInfo()
-        Spacer(Modifier.height(20.dp))
-        StartButton(onClick = onClick)
+        ProfileImage() // Afficher l'image de profil
+        Spacer(Modifier.height(10.dp)) // Espacement après l'image
+        UserInfo() // Afficher les informations de l'utilisateur
+        Spacer(Modifier.height(20.dp)) // Espacement
+        ContactInfo() // Afficher les informations de contact
+        Spacer(Modifier.height(20.dp)) // Espacement
+        StartButton(onClick = onClick) // Afficher le bouton "Démarrer"
     }
 }
 
 @Composable
 fun CompactProfileLayout(onClick: () -> Unit) {
+    // Disposition compacte pour les petits écrans
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()
@@ -67,12 +71,14 @@ fun CompactProfileLayout(onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(vertical = 4.dp)
         ) {
+            // Colonne gauche avec l'image de profil et les informations de l'utilisateur
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 ProfileImage()
                 Spacer(Modifier.height(10.dp))
                 UserInfo()
             }
-            Spacer(Modifier.width(100.dp))
+            Spacer(Modifier.width(100.dp)) // Espacement entre les deux colonnes
+            // Colonne droite avec les informations de contact et le bouton
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 ContactInfo()
                 Spacer(Modifier.height(20.dp))
@@ -84,15 +90,17 @@ fun CompactProfileLayout(onClick: () -> Unit) {
 
 @Composable
 fun ProfileImage() {
+    // Afficher l'image de profil avec une forme rectangulaire
     Image(
         painter = painterResource(R.drawable.sans_titre),
         contentDescription = "Profile Image",
-        modifier = Modifier.clip(RectangleShape)
+        modifier = Modifier.clip(RectangleShape) // Appliquer une découpe rectangulaire à l'image
     )
 }
 
 @Composable
 fun UserInfo() {
+    // Afficher les informations utilisateur (nom, profession et école)
     Text(
         text = "Paul GARDIEN",
         fontSize = 30.sp,
@@ -103,44 +111,46 @@ fun UserInfo() {
         fontSize = 25.sp,
         fontWeight = FontWeight.Bold
     )
-    Spacer(Modifier.height(20.dp))
+    Spacer(Modifier.height(20.dp)) // Espacement entre les informations
     Text(
         text = "Ecole d'ingénieur ISIS",
-        fontStyle = FontStyle.Italic
+        fontStyle = FontStyle.Italic // Appliquer une police italique pour l'école
     )
 }
 
 @Composable
 fun ContactInfo() {
+    // Afficher les informations de contact (email et LinkedIn)
     Row {
         Image(
             painter = painterResource(R.drawable.mail),
             contentDescription = "Email",
             modifier = Modifier
                 .size(30.dp)
-                .padding(end = 8.dp)
+                .padding(end = 8.dp) // Espacement à droite de l'icône email
         )
-        Text(text = "paul.gardien63@gmail.com")
+        Text(text = "paul.gardien63@gmail.com") // Afficher l'email
     }
-    Spacer(Modifier.height(10.dp))
+    Spacer(Modifier.height(10.dp)) // Espacement entre les informations
     Row {
         Image(
             painter = painterResource(R.drawable.li),
             contentDescription = "LinkedIn",
             modifier = Modifier
                 .size(30.dp)
-                .padding(end = 8.dp)
+                .padding(end = 8.dp) // Espacement à droite de l'icône LinkedIn
         )
-        Text(text = "www.linkedin.com")
+        Text(text = "www.linkedin.com") // Afficher le lien LinkedIn
     }
 }
 
 @Composable
 fun StartButton(onClick: () -> Unit) {
+    // Afficher un bouton "Démarrer" qui exécute l'action fournie lors du clic
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors()
+        colors = ButtonDefaults.buttonColors() // Utiliser les couleurs par défaut du bouton
     ) {
-        Text("Démarrer")
+        Text("Démarrer") // Texte du bouton
     }
 }
