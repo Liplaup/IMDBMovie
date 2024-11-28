@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 
+
 @Composable
 fun Examscreen(viewModel: MainViewModel, navController: NavController) {
 
