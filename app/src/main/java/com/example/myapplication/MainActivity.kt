@@ -207,7 +207,7 @@ fun NavHostContainer(navController: NavHostController, viewModel: MainViewModel,
     NavHost(navController = navController, startDestination = "profildestination", modifier = modifier) {
         // Définition des destinations dans le NavHost
         composable("profildestination") {
-            ProfileView(windowSizeClass) { navController.navigate("filmsdestination") }
+            ProfileView(windowSizeClass) { navController.navigate("Examen") }
         }
         composable("filmsdestination") {
             FilmsScreen(viewModel, navController)
@@ -225,6 +225,9 @@ fun NavHostContainer(navController: NavHostController, viewModel: MainViewModel,
         composable("serieDetail/{seriesId}") { backStackEntry ->
             val seriesId = backStackEntry.arguments?.getString("seriesId")
             SerieDetailScreen(seriesId?.toInt() ?: 0, viewModel, navController)
+        }
+        composable("Examen") {
+            Examscreen(viewModel, navController)
         }
     }
 }
