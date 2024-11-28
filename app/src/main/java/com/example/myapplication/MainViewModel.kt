@@ -5,6 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplicationtest.playlistjson
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
@@ -25,6 +28,7 @@ class MainViewModel : ViewModel() {
     val movies = MutableStateFlow<List<TmdbMovie>>(listOf())
     val series = MutableStateFlow<List<TmdbSeries>>(listOf())
     val actors = MutableStateFlow<List<TmdbActor>>(listOf())
+    val playlist = MutableStateFlow<List<Playlist>>(listOf())
 
     // LiveData pour les films et séries sélectionnés
     private val _movie = MutableLiveData<TmdbMovie>()
@@ -151,7 +155,11 @@ class MainViewModel : ViewModel() {
                 actors.value = actorList
             } catch (e: Exception) {
                 // Gestion des erreurs
-                Log.e("MainViewModel", "Erreur lors de la récupération des acteurs par ID de film", e)
+                Log.e(
+                    "MainViewModel",
+                    "Erreur lors de la récupération des acteurs par ID de film",
+                    e
+                )
             }
         }
     }
@@ -166,8 +174,28 @@ class MainViewModel : ViewModel() {
                 actors.value = actorList
             } catch (e: Exception) {
                 // Gestion des erreurs
-                Log.e("MainViewModel", "Erreur lors de la récupération des acteurs par ID de série", e)
+                Log.e(
+                    "MainViewModel",
+                    "Erreur lors de la récupération des acteurs par ID de série",
+                    e
+                )
             }
         }
     }
+
+    fun fetchPlayList(): Playlist {
+        val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+        return moshi.adapter(Playlist::class.java).fromJson(playlistjson)!!
+    }
+    fun getPlayList() {
+        viewModelScope.launch {
+            try {
+                val updatedPlaylist = fetchPlayList()
+                playlist.value = listOf(updatedPlaylist)
+            } catch (e: Exception) {
+                Log.e("MainViewModel", "Erreur lors de la récupération de la playlist", e)
+            }
+        }
+    }
+
 }
