@@ -36,7 +36,7 @@ import com.example.myapplicationtest.playlistjson
 
 @Composable
 fun Examscreen(viewModel: MainViewModel, navController: NavController) {
-
+item
         // Contenu de la carte : une image, un titre et la première date de diffusion
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
